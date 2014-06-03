@@ -1,22 +1,46 @@
 package Interfaces;
 
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Properties;
 
-import jdbm.btree.BTree;
-
+import Exceptions.DBInvalidColumnNameException;
+import Utilities.Column;
+import Utilities.OurBPlusTree;
 import Utilities.Record;
 import Utilities.Table;
 
 public interface DBFileSystem {
-	public boolean createTable();
-	public Table loadTable();
-	public boolean createTree();
-	public BTree loadTree();
-	public boolean addRecord();
+	public boolean createTable(String tableName,
+			Hashtable<String, String> colNameType,
+			Hashtable<String, String> colNameRef, String strKeyCol);
+
+	public Table loadTable(String tableName);
+
+	public boolean createTree(String tableName, String colName);
+
+	public OurBPlusTree loadTree(String tableName, String columnName);
+
+	public boolean addRecord(String tableName,
+			Hashtable<String, String> htblColNameValue);
+
 	public void deleteRecord(Hashtable<String, Object> params);
+
 	public Properties loadProperties();
-	public Hashtable<String, Object> loadMetaData();
+
+	public void loadMetaData() throws DBInvalidColumnNameException;
+
+	public void appendMetaData(Table table);
+
 	public Hashtable<Integer, Record> loadPage(String pageName);
+
 	public void deleteRecord(String pageName, int rowNumber);
+
+	public void updateProperties();
+
+	public List<Column> getColumns();
+
+	boolean saveTrees();
+
+	void saveMetaData();
 }

@@ -19,7 +19,6 @@ public class SaveAllCommand implements DBNonQueryCommand{
 	}
 	
 	public void execute() throws DBEngineException{
-		//TODO
-		throw new UnsupportedOperationException();
+		return;
 	}
 }

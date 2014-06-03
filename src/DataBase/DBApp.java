@@ -1,18 +1,10 @@
 package DataBase;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 
-import jdbm.RecordManager;
 import Commands.CreateIndexCommand;
 import Commands.CreateTableCommand;
 import Commands.DeleteCommand;
@@ -20,26 +12,30 @@ import Commands.InsertCommand;
 import Commands.SaveAllCommand;
 import Commands.SelectCommand;
 import Exceptions.DBEngineException;
+import Exceptions.DBInvalidColumnNameException;
 import Interfaces.DBAppInterface;
 import Interfaces.DBFileSystem;
 import Interfaces.DBNonQueryCommand;
 import Interfaces.DBQueryCommand;
-import Utilities.Column;
 import Utilities.Memory;
 import Utilities.Table;
 
-@SuppressWarnings("unused")
+@SuppressWarnings("rawtypes")
 public class DBApp implements DBAppInterface {
 	private static DBFileSystem fileSystem = Memory.getMemory();
 	private static DBApp dBApp = new DBApp();
 
-	private int MaximumRowsCountinPage, BPlusTreeN;
-	private File metaData = new File("data/metadata.csv"),
-			DBAppProperties = new File("config/DBApp.properties");
-	private RecordManager recordManager;
+	public static final String MaximumRowsCountinPage = "MaximumRowsCountinPage",
+			BPlusTreeN = "BPlusTreeN";
+	private static File metaData, DBAppProperties;
+	private Properties properties;
 
 	private DBApp() {
-		init();
+		try {
+			init();
+		} catch (DBInvalidColumnNameException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static DBFileSystem getFileSystem() {
@@ -50,22 +46,17 @@ public class DBApp implements DBAppInterface {
 		return dBApp;
 	}
 
-	public int getMaximumRowsCountinPage(){
-		return MaximumRowsCountinPage;
+	public int getMaximumRowsCountinPage() {
+		return Integer.parseInt(properties.getProperty(MaximumRowsCountinPage));
 	}
-	
+
 	@Override
-	public void init() {
-		Properties properties = getFileSystem().loadProperties();
-
-		MaximumRowsCountinPage = Integer.parseInt((String) properties
-				.get("MaximumRowsCountinPage"));
-		BPlusTreeN = Integer.parseInt((String) properties.get("BPlusTreeN"));
-		System.out.println(MaximumRowsCountinPage);
-		System.out.println(BPlusTreeN);
-
-		Hashtable<String, Object> metaData = getFileSystem().loadMetaData();
-		Table.initTables((List<Column>) metaData.get("columns"));
+	public void init() throws DBInvalidColumnNameException {
+		metaData = new File("data/metadata.csv");
+		DBAppProperties = new File("config/DBApp.properties");
+		properties = getFileSystem().loadProperties();
+		getFileSystem().loadMetaData();
+		Table.initTables(getFileSystem().getColumns(), properties);
 	}
 
 	@Override
@@ -76,6 +67,8 @@ public class DBApp implements DBAppInterface {
 		DBNonQueryCommand createTableCommand = new CreateTableCommand(
 				strTableName, htblColNameType, htblColNameRefs, strKeyColName);
 		createTableCommand.execute();
+		fileSystem.createTable(strTableName, htblColNameType, htblColNameRefs,
+				strKeyColName);
 	}
 
 	@Override
@@ -117,6 +110,22 @@ public class DBApp implements DBAppInterface {
 	public void saveAll() throws DBEngineException {
 		DBNonQueryCommand saveAllCommand = new SaveAllCommand(metaData);
 		saveAllCommand.execute();
+	}
+
+	public int getBPlusTreeN() {
+		return Integer.parseInt(properties.getProperty(BPlusTreeN));
+	}
+
+	public static File getMetaData() {
+		return metaData;
+	}
+
+	public static File getDBAppProperties() {
+		return DBAppProperties;
+	}
+
+	public Properties getProperties() {
+		return properties;
 	}
 
 }

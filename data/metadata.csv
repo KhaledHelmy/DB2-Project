@@ -1,0 +1,12 @@
+Mussab, Email, java.lang.String, False, False, null
+Mussab, ID, java.lang.Integer, True, True, null
+Mussab, Name, java.lang.String, False, False, null
+Omar, Address, java.lang.String, False, False, null
+Omar, Employee, java.lang.Integer, False, False, Mussab.ID
+Omar, ID, java.lang.Integer, True, True, null
+Person, Email, java.lang.String, False, False, null
+Person, ID, java.lang.Integer, True, True, null
+Person, Name, java.lang.String, False, False, null
+House, Address, java.lang.String, False, False, null
+House, Employee, java.lang.Integer, False, False, Person.ID
+House, ID, java.lang.Integer, True, True, null

@@ -22,6 +22,11 @@ public class DeleteCommand implements DBNonQueryCommand{
 	
 	public void execute() throws DBEngineException{
 		Table table = Table.getInstance(strTableName);
+		
+		if(table == null){
+			throw new DBEngineException("Table " + strTableName + " doesn't Exist");
+		}
+		
 		table.deleteRecords(htblColNameValue, strOperator);
 	}
 }

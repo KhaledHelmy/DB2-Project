@@ -2,11 +2,14 @@ package Interfaces;
 
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 
 import Exceptions.DBEngineException;
+import Exceptions.DBInvalidColumnNameException;
+import Utilities.Record;
 
 public interface DBAppInterface {
-	public void init();
+	public void init() throws DBInvalidColumnNameException;
 
 	public void createTable(String strTableName,
 			Hashtable<String, String> htblColNameType,

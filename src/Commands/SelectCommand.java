@@ -21,6 +21,11 @@ public class SelectCommand implements DBQueryCommand{
 	
 	public Iterator execute() throws DBEngineException{
 		Table table = Table.getInstance(strTable);
+		
+		if(table == null){
+			throw new DBEngineException("Table " + strTable + " doesn't Exist");
+		}
+		
 		return table.query(htblColNameValue, strOperator);
 	}
 }
