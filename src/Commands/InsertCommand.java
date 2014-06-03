@@ -1,0 +1,23 @@
+package Commands;
+
+import java.util.Hashtable;
+
+import Exceptions.DBEngineException;
+import Interfaces.DBNonQueryCommand;
+import Utilities.Table;
+
+public class InsertCommand implements DBNonQueryCommand{
+	private String strTableName;
+	private Hashtable<String, String> htblColNameValue;
+	
+	public InsertCommand(	String strTableName, 
+							Hashtable<String, String> htblColNameValue){
+		this.strTableName = strTableName;
+		this.htblColNameValue = htblColNameValue;
+	}
+	
+	public void execute() throws DBEngineException{
+		Table table = Table.getInstance(strTableName);
+		table.insertRecord(htblColNameValue);
+	}
+}
