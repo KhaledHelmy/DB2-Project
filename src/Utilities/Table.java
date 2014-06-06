@@ -72,23 +72,20 @@ public class Table {
 		ourBPlusTrees.remove(colName);
 	}
 
-	private boolean isValidType(String type) throws DBEngineException{
-		try{
+	private boolean isValidType(String type) throws DBEngineException {
+		try {
 			Class<?> myClass = Class.forName(type);
 			myClass.getDeclaredMethod("valueOf", String.class);
-		} catch(ClassNotFoundException e){
-			throw new DBEngineException(
-					type + " is not a valid type");
+		} catch (ClassNotFoundException e) {
+			throw new DBEngineException(type + " is not a valid type");
 		} catch (NoSuchMethodException e) {
-			throw new DBEngineException(
-					type + " is not a supported type");
+			throw new DBEngineException(type + " is not a supported type");
 		} catch (SecurityException e) {
-			throw new DBEngineException(
-					type + " is not a supported type");
-		} 
+			throw new DBEngineException(type + " is not a supported type");
+		}
 		return true;
 	}
-	
+
 	public Table(String strTableName,
 			Hashtable<String, String> htblColNameType,
 			Hashtable<String, String> htblColNameRefs, String strKeyColName)
@@ -100,7 +97,7 @@ public class Table {
 		if (tables.containsKey(strTableName))
 			throw new DBEngineException("The Table " + strTableName
 					+ " already exists in the database");
-		
+
 		setName(strTableName);
 		String temp;
 		Hashtable<String, Column> c = new Hashtable<String, Column>();
@@ -115,12 +112,12 @@ public class Table {
 			} else {
 				temp += "False, False, ";
 			}
-			
-//			if(!isValidType(colType)){
-//				throw new DBEngineException(
-//						"Column " + s + " doesn't have a valid type (" + colType + ")");
-//			}
-			
+
+			// if(!isValidType(colType)){
+			// throw new DBEngineException(
+			// "Column " + s + " doesn't have a valid type (" + colType + ")");
+			// }
+
 			String ref = htblColNameRefs.get(s) + "";
 			String[] reference = ref.split("\\.");
 			if (!ref.equalsIgnoreCase("null")) {
@@ -136,25 +133,30 @@ public class Table {
 						.containsKey(referencedColumnName))
 					throw new DBEngineException(
 							"The referenced Column doesn't exist");
-				Column referencedColumn = Table.getInstance(referencedTableName)
-												.getColumn(referencedColumnName);
-				if(!referencedColumn.getColType().equalsIgnoreCase(htblColNameType.get(s))){
+				Column referencedColumn = Table
+						.getInstance(referencedTableName).getColumn(
+								referencedColumnName);
+				if (!referencedColumn.getColType().equalsIgnoreCase(
+						htblColNameType.get(s))) {
 					throw new DBEngineException(
 							"The referenced Column is not of the same type");
 				}
-				if(!referencedColumn.isKey()){
+				if (!referencedColumn.isKey()) {
 					throw new DBEngineException(
 							"The referenced Column is not a primary key");
 				}
 			}
 			temp += ref;
 			Column col = new Column(temp);
-			
-			if(col.HasReference()){
-				Table referencedTable = Table.getInstance(col.getReferencedTableName());
-				referencedTable.addReferenceBack(getName() + "." + col.getColName(), col.getReferencedColumnName());
+
+			if (col.HasReference()) {
+				Table referencedTable = Table.getInstance(col
+						.getReferencedTableName());
+				referencedTable.addReferenceBack(
+						getName() + "." + col.getColName(),
+						col.getReferencedColumnName());
 			}
-			
+
 			c.put(s, col);
 		}
 		columns.putAll(c);
@@ -169,10 +171,10 @@ public class Table {
 		Column column = getColumn(targetColumn);
 		column.addReferenceBack(referenceBack + "." + targetColumn);
 	}
-	
-	public List<String> getAllReferenceBack(){
+
+	public List<String> getAllReferenceBack() {
 		List<String> referencesBack = new ArrayList<String>();
-		for(Column column : getAllCoLumns()){
+		for (Column column : getAllCoLumns()) {
 			referencesBack.addAll(column.getReferenceBack());
 		}
 		return referencesBack;
@@ -310,11 +312,14 @@ public class Table {
 			getInstance(tableName).setTotalNumberOfInsertions(
 					Integer.parseInt(temp));
 		}
-		for(Table table : tables.values()){
-			for(Column column : table.getColumns().values()){
-				if(column.HasReference()){
-					Table referencedTable = Table.getInstance(column.getReferencedTableName());
-					referencedTable.addReferenceBack(table.getName() + "." + column.getColName(), column.getReferencedColumnName());
+		for (Table table : tables.values()) {
+			for (Column column : table.getColumns().values()) {
+				if (column.HasReference()) {
+					Table referencedTable = Table.getInstance(column
+							.getReferencedTableName());
+					referencedTable.addReferenceBack(table.getName() + "."
+							+ column.getColName(),
+							column.getReferencedColumnName());
 				}
 			}
 		}
@@ -339,68 +344,70 @@ public class Table {
 	public void deleteRecords(Hashtable<String, String> htblColNameValue,
 			String strOperator) {
 		Iterator recordsToDelete = query(htblColNameValue, strOperator);
-		
-		if(doCascade){
+
+		if (doCascade) {
 			recordsToDelete = cascadeDeletion(recordsToDelete);
 		}
-		
+
 		while (recordsToDelete.hasNext()) {
 			Record record = (Record) recordsToDelete.next();
 			record.delete();
-			for(OurBPlusTree tree : getAllOurBPlusTrees()){
+			for (OurBPlusTree tree : getAllOurBPlusTrees()) {
 				tree.ourDelete(record);
 			}
 		}
-		
+
 		unloadAllPages();
 	}
-	
-	private String getCascadeTokenFormat(String tableName, String column, String value){
+
+	private String getCascadeTokenFormat(String tableName, String column,
+			String value) {
 		return tableName + "." + column + "." + value;
 	}
-	
-	private List<String> getCascadeTokenOfRecord(String TableName, Record record){
+
+	private List<String> getCascadeTokenOfRecord(String TableName, Record record) {
 		List<String> list = new ArrayList<String>();
-		for(Column col : columns.values()){
+		for (Column col : columns.values()) {
 			String colName = col.getColName();
 			List<String> referencesBack = col.getReferenceBack();
-			if(referencesBack.size() != 0){
-				for(String referenceBack : referencesBack){
+			if (referencesBack.size() != 0) {
+				for (String referenceBack : referencesBack) {
 					String[] split = referenceBack.split("\\.");
-					list.add(getCascadeTokenFormat(split[0], split[1], record.getValue(colName)));
+					list.add(getCascadeTokenFormat(split[0], split[1],
+							record.getValue(colName)));
 				}
 			}
 		}
 		return list;
 	}
-	
+
 	private Iterator cascadeDeletion(Iterator recordsToCascade) {
 		Set<String> queue = new LinkedHashSet<String>();
 		Set<Record> recordsToDelete = new HashSet<Record>();
-		
-		while(recordsToCascade.hasNext()){
+
+		while (recordsToCascade.hasNext()) {
 			Record record = (Record) recordsToCascade.next();
 			record.deactivate();
 			queue.addAll(getCascadeTokenOfRecord(getName(), record));
 			recordsToDelete.add(record);
 		}
 		Iterator<String> iterator;
-		while(!queue.isEmpty()){
+		while (!queue.isEmpty()) {
 			iterator = queue.iterator();
 			String token = iterator.next();
 			iterator.remove();
-			
+
 			String[] tokenSplit = token.split("\\.");
 			String tableName = tokenSplit[0];
-			
+
 			Table table = Table.getInstance(tableName);
 			Hashtable<String, String> htblColNameValue = new Hashtable<String, String>();
 			htblColNameValue.put(tokenSplit[1], tokenSplit[2]);
 			Iterator searchResult = table.query(htblColNameValue, "or");
-			
-			while(searchResult.hasNext()){
+
+			while (searchResult.hasNext()) {
 				Record record = (Record) searchResult.next();
-				if(!record.isActive()){
+				if (!record.isActive()) {
 					continue;
 				}
 				record.deactivate();
@@ -408,14 +415,14 @@ public class Table {
 				recordsToDelete.add(record);
 			}
 		}
-		
+
 		return recordsToDelete.iterator();
 	}
-	
-	public List<OurBPlusTree> getAllOurBPlusTrees(){
+
+	public List<OurBPlusTree> getAllOurBPlusTrees() {
 		return new ArrayList<OurBPlusTree>(ourBPlusTrees.values());
 	}
-	
+
 	public void insertRecord(Hashtable<String, String> htblColNameValue)
 			throws DBEngineException {
 		/*
@@ -423,19 +430,19 @@ public class Table {
 		 * number of total insertions in properties (DONE) mark page as not
 		 * loaded (DONE) insert in B+ trees
 		 */
-		
-		
-		for(String key : htblColNameValue.keySet()){
-			if(!isColName(key)){
-				throw new DBEngineException(key + " is not a column in table " + getName());
+
+		for (String key : htblColNameValue.keySet()) {
+			if (!isColName(key)) {
+				throw new DBEngineException(key + " is not a column in table "
+						+ getName());
 			}
 		}
-		
-		for(String key : getColumns().keySet()){
+
+		for (String key : getColumns().keySet()) {
 			String value = htblColNameValue.get(key);
 			htblColNameValue.put(key, value + "");
 		}
-		
+
 		// Check Constraints
 		ConstraintsChecker constraintsChecker = ConstraintsCheckerFactory
 				.getInstance(ConstraintsCheckersType.InsertConstraintChecker);
@@ -444,7 +451,44 @@ public class Table {
 		// if(!constraintsChecker.check(getName(), htblColNameValue)){
 		// / Raise some error (exception or return false or just play dead)
 		// }
-		
+
+		// Insert in files
+		DBApp.getFileSystem().addRecord(getName(), htblColNameValue);
+
+		// Mark page as not loaded
+		int pageNumber = getNumberOfPages() - 1;
+		unloadPage(pageNumber);
+
+		// Increment number of total insertions
+		incrementTotalNumberOfInsertions();
+
+		// Insert in B+ trees
+		updateBPlusTrees(htblColNameValue, getTotalNumberOfInsertions() - 1);
+	}
+
+	public void updateRecord(Hashtable<String, String> htblColNameValue)
+			throws DBEngineException {
+		for (String key : htblColNameValue.keySet()) {
+			if (!isColName(key)) {
+				throw new DBEngineException(key + " is not a column in table "
+						+ getName());
+			}
+		}
+
+		for (String key : getColumns().keySet()) {
+			String value = htblColNameValue.get(key);
+			htblColNameValue.put(key, value + "");
+		}
+
+		// Check Constraints
+		ConstraintsChecker constraintsChecker = ConstraintsCheckerFactory
+				.getInstance(ConstraintsCheckersType.InsertConstraintChecker);
+		constraintsChecker.check(getName(), htblColNameValue);
+
+		// if(!constraintsChecker.check(getName(), htblColNameValue)){
+		// / Raise some error (exception or return false or just play dead)
+		// }
+
 		// Insert in files
 		DBApp.getFileSystem().addRecord(getName(), htblColNameValue);
 
@@ -470,7 +514,7 @@ public class Table {
 		} else {
 			result = intersection(htblColNameValue);
 		}
-		
+
 		return result;
 	}
 
@@ -594,9 +638,9 @@ public class Table {
 	public boolean pageLoaded(int pageNumber) {
 		return pages.get(pageNumber) != null;
 	}
-	
-	private static void unloadAllPages(){
-		for(Table table : tables.values()){
+
+	private static void unloadAllPages() {
+		for (Table table : tables.values()) {
 			table.pages = new Hashtable<Integer, Page>();
 		}
 	}
