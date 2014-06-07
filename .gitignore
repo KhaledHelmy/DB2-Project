@@ -12,6 +12,7 @@ hs_err_pid*
 
 *.classpath
 *.project
-*.settings
+.settings/
+.metadata/
 bin/
 *.class
