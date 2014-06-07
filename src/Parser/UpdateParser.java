@@ -11,7 +11,7 @@ public class UpdateParser implements StatmentParserInterface {
 	}
 
 	@Override
-	public void parse() {
+	public String parse() {
 		throw new UnsupportedOperationException();
 	}
 

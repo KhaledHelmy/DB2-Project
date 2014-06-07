@@ -1,7 +1,7 @@
 package Interfaces;
 
-import Exceptions.DBEngineException;
+import Exceptions.DBAppException;
 
 public interface StatmentParserInterface {
-	public void parse() throws DBEngineException;
+	public String parse() throws DBAppException;
 }
