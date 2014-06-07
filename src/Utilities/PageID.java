@@ -25,7 +25,7 @@ public class PageID {
 		this.pageNum = pageNum;
 	}
 
-	public String pageName() {
+	public String getPageName() {
 		return tableName + "_" + pageNum + ".csv";
 	}
 }
