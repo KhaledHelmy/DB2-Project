@@ -11,7 +11,7 @@ public class SelectParser implements StatmentParserInterface {
 	}
 
 	@Override
-	public void parse() {
+	public String parse() {
 		throw new UnsupportedOperationException();
 	}
 }

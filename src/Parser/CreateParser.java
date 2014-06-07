@@ -22,7 +22,7 @@ public class CreateParser implements StatmentParserInterface {
 	}
 
 	@Override
-	public void parse() throws DBEngineException {
+	public String parse() throws DBEngineException {
 		String tableName = stmnt.getTableName().toString();
 		String strKeyColName = "", colName, colType, refTable, refColumn;
 		Hashtable<String, String> htblColNameType = new Hashtable<String, String>();
@@ -67,5 +67,6 @@ public class CreateParser implements StatmentParserInterface {
 		}
 		dbEngine.createTable(tableName, htblColNameType, htblColNameRefs,
 				strKeyColName);
+		return "Table " + tableName + " Created";
 	}
 }
