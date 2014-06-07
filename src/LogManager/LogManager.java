@@ -15,6 +15,7 @@ public class LogManager implements LogManagerInterface {
 	FileWriter fw;
 	String path;
 	String dataToBeFlushed = "";
+	static LogManager logManager = null;
 
 	public static void main(String[] args) throws IOException {
 
@@ -32,6 +33,17 @@ public class LogManager implements LogManagerInterface {
 		x.recordCommit("miro");
 		x.flushLog();
 
+	}
+	
+	private LogManager() {
+		init();
+	}
+	
+	public static LogManager getInstance() {
+		if (logManager==null) {
+			logManager=new LogManager();
+		}
+		return logManager;
 	}
 
 	@Override
