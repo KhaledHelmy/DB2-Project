@@ -368,7 +368,7 @@ public class Memory implements DBFileSystem {
 					logFileReversed.push(line);
 				}
 			}
-			//System.out.println(logFileReversed.toString());
+			System.out.println(logFileReversed.toString());
 			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();

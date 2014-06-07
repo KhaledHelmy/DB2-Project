@@ -7,6 +7,7 @@ import java.util.Hashtable;
 
 import Interfaces.DBFileSystem;
 import Utilities.Memory;
+import Utilities.PageID;
 
 public class LogManager implements LogManagerInterface {
 	DBFileSystem fs = Memory.getMemory();
@@ -24,9 +25,10 @@ public class LogManager implements LogManagerInterface {
 		old.put("rab3a","ramz el somood");
 		Hashtable<String, String> new1 = new Hashtable<String,String>();
 		new1.put("rabia","fel qalb");
-		x.recordUpdate("miro", "25-4968", "Name", old, new1);
-		x.recordInsert("miro", old);
-		x.recordDelete("miro", "25-4968", new1);
+		PageID pid = new PageID("3", "Taleb");
+		x.recordUpdate("miro",pid, "25-4968", "Name", old, new1);
+		x.recordInsert("miro",pid, old);
+		x.recordDelete("miro",pid, "25-4968", new1);
 		x.recordCommit("miro");
 		x.flushLog();
 
@@ -49,26 +51,26 @@ public class LogManager implements LogManagerInterface {
 	}
 
 	@Override
-	public synchronized void recordUpdate(String strTransID,
+	public synchronized void recordUpdate(String strTransID,PageID page,
 			String strKeyValue, String strColName, Object objOld, Object objNew) {
-		dataToBeFlushed += "update," + strTransID + "," + strKeyValue + ","
+		dataToBeFlushed += "update," + strTransID + "," +page.getPageName()+","+ strKeyValue + ","
 				+ strColName + "," + objOld.toString() + ","
 				+ objNew.toString() + "\n";
 
 	}
 
 	@Override
-	public synchronized void recordInsert(String strTransID,
+	public synchronized void recordInsert(String strTransID,PageID page,
 			Hashtable<String, String> htblColValues) {
 		dataToBeFlushed += "insert," + strTransID + ","
-				+ htblColValues.toString() + "\n";
+				+page.getPageName()+","+ htblColValues.toString() + "\n";
 
 	}
 
 	@Override
-	public synchronized void recordDelete(String strTransID,
+	public synchronized void recordDelete(String strTransID,PageID page,
 			String strKeyValue, Hashtable<String, String> htblColValues) {
-		dataToBeFlushed += "delete," + strTransID + "," + strKeyValue + ","
+		dataToBeFlushed += "delete," + strTransID + "," +page.getPageName()+","+ strKeyValue + ","
 				+ htblColValues.toString() + "\n";
 
 	}
