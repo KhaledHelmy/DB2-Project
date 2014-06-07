@@ -8,24 +8,29 @@ import Utilities.PageID;
 import Utilities.Memory;
 
 public class BufferManager implements BufferManagerInterface {
-	private static BufferManager bufferManager = new BufferManager();  
+	private static BufferManager bufferManager = null;  
 	
-	private static final int SIZE = 1000;
+	private static final int SIZE = 50;
 	private Page[] memory;
 	
 	private int minEmptySlotSize, maxUsedSlotSize;
 	private PriorityQueue<Integer> emptySlots, usedSlots;
 	
 	private BufferManager() {
-		memory = new Page[SIZE];
+		// Ask Fadwa about constructor and init
 	}
 	
-	public static BufferManager getInstance() {
+	public static BufferManager getBufferManager() {
+		if (bufferManager == null)
+			bufferManager = new BufferManager();
 		return bufferManager;
 	}
 
 	public void init() {
+		memory = new Page[SIZE];
 		setSlotSizes();
+		emptySlots = new PriorityQueue<Integer>();
+		usedSlots = new PriorityQueue<Integer>();
 		for (int i=0; i<SIZE; i++) {
 			emptySlots.add(new Integer(i));
 		}
