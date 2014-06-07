@@ -43,4 +43,6 @@ public interface DBFileSystem {
 	boolean saveTrees();
 
 	void saveMetaData();
+	
+	public String getProperty(String propertyName);
 }

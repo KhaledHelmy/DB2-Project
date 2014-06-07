@@ -319,4 +319,21 @@ public class Memory implements DBFileSystem {
 			e.printStackTrace();
 		}
 	}
+	
+	public String getProperty(String propertyName) {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(new File(
+					"config/DBApp.properties")));
+			String line;
+			while ((!((line = br.readLine()).split("=")[0] == null))
+					&& (!line.split("=")[0].equals(propertyName)))
+				;
+			String propertyValue = line.split("=")[1];
+			br.close();
+			return propertyValue;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
