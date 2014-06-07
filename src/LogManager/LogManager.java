@@ -1,13 +1,15 @@
 package LogManager;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Hashtable;
 
+import Interfaces.DBFileSystem;
+import Utilities.Memory;
+
 public class LogManager implements LogManagerInterface {
+	DBFileSystem fs = Memory.getMemory();
 	BufferedReader br;
 	FileWriter fw;
 	String path;
@@ -32,31 +34,13 @@ public class LogManager implements LogManagerInterface {
 
 	@Override
 	public void init() {
-		try {
-			br = new BufferedReader(new FileReader(new File(
-					"config/DBApp.properties")));
-			String line;
-			while ((!((line = br.readLine()).split("=")[0] == null))
-					&& (!line.split("=")[0].equals("LogfilePath")))
-				;
-			path = line.split("=")[1];
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		path = fs.getProperty("LogfilePath");
 	}
 
 	@Override
 	public synchronized void flushLog() {
-		try {
-			fw = new FileWriter(path, true);
-			fw.append(dataToBeFlushed);
-			fw.close();
-			dataToBeFlushed = "";
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		fs.appendToFile(dataToBeFlushed, path);
+		dataToBeFlushed = "";
 	}
 
 	@Override

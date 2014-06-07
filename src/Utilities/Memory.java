@@ -8,8 +8,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -17,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Stack;
 import java.util.TreeSet;
 
 import Exceptions.DBEngineException;
@@ -335,5 +334,45 @@ public class Memory implements DBFileSystem {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public void appendToFile(String toBeAppended,String path) {
+		FileWriter fw;
+		try {
+			fw = new FileWriter(path, true);
+			fw.append(toBeAppended);
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	@Override
+	public void readLog(ArrayList<String> committed,
+			Stack<String> logFileReversed) {
+		String path = Memory.getMemory().getProperty("LogfilePath");
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(new File(path)));
+			String line;
+			while ((line = br.readLine())!=null) {
+				if (line.split(",")[0]!=null&&line.split(",")[0].equals("start")) {
+					continue;
+				}
+				else if (line.split(",")[0]!=null&&line.split(",")[0].equals("commit")) {
+					committed.add(line.split(",")[1]);
+				}
+				else {
+					logFileReversed.push(line);
+				}
+			}
+			//System.out.println(logFileReversed.toString());
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }
