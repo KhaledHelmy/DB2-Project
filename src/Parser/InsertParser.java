@@ -12,6 +12,7 @@ public class InsertParser implements StatmentParserInterface {
 
 	@Override
 	public String parse() {
+		
 		throw new UnsupportedOperationException();
 	}
 
