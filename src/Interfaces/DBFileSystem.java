@@ -1,8 +1,10 @@
 package Interfaces;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
+import java.util.Stack;
 
 import Exceptions.DBInvalidColumnNameException;
 import Utilities.Column;
@@ -45,4 +47,8 @@ public interface DBFileSystem {
 	void saveMetaData();
 	
 	public String getProperty(String propertyName);
+	
+	public void appendToFile(String toBeAppended,String path);
+	
+	public void readLog(ArrayList<String> committed, Stack<String> logFileReversed);
 }

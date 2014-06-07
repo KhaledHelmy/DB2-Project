@@ -1,17 +1,18 @@
 package RecoveryManager;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import Interfaces.DBFileSystem;
+import Utilities.Memory;
+
 public class RecoveryManager implements RecoveryManagerInterface {
+	DBFileSystem fs = Memory.getMemory();
 	String path;
 	BufferedReader br;
 	ArrayList<String> committed = new ArrayList<String>(); //names of committed transactions
-	Stack<String> logFileReveresed = new Stack<String>();
+	Stack<String> logFileReversed = new Stack<String>();
 	Stack<String> logFileMa3dool = new Stack<String>();
 
 	public static void main(String[] args) {
@@ -21,38 +22,17 @@ public class RecoveryManager implements RecoveryManagerInterface {
 
 	@Override
 	public void recover() {
-		getPath();
-		try {
-			br = new BufferedReader(new FileReader(new File(path)));
-			System.out.println(br.readLine());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		ta7tLeFoo2();
-		Foo2LeTa7t();
+		fs.readLog(committed, logFileReversed);
+		undo();
+		redo();
 	}
 
-	private void ta7tLeFoo2() {
+	private void undo() {
 		String line;
-		try {
-			while ((line = br.readLine())!=null) {
-				if (line.split(",")[0]!=null&&line.split(",")[0].equals("start")) {
-					continue;
-				}
-				else if (line.split(",")[0]!=null&&line.split(",")[0].equals("commit")) {
-					committed.add(line.split(",")[1]);
-				}
-				else {
-					logFileReveresed.push(line);
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		String transID;
 		String task;
-		while (!logFileReveresed.isEmpty()) {
-			line = logFileReveresed.pop();
+		while (!logFileReversed.isEmpty()) {
+			line = logFileReversed.pop();
 			transID = line.split(",")[1];
 			if (isCommitted(transID)) {
 				logFileMa3dool.push(line);
@@ -83,7 +63,7 @@ public class RecoveryManager implements RecoveryManagerInterface {
 		return false;
 	}
 
-	private void Foo2LeTa7t() {
+	private void redo() {
 		String line;
 		String task;
 		while (!logFileMa3dool.isEmpty()) {
@@ -102,7 +82,7 @@ public class RecoveryManager implements RecoveryManagerInterface {
 		}
 	}
 
-	private void getPath() {
+	/*private void getPath() {
 		try {
 			br = new BufferedReader(new FileReader(new File(
 					"config/DBApp.properties")));
@@ -115,6 +95,6 @@ public class RecoveryManager implements RecoveryManagerInterface {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 }
