@@ -55,7 +55,7 @@ public class Memory implements DBFileSystem {
 	}
 
 	@Override
-	public boolean createTable(String tableName,
+	public synchronized boolean createTable(String tableName,
 			Hashtable<String, String> colNameType,
 			Hashtable<String, String> colNameRef, String strKeyCol) {
 		FileWriter fw = null;
@@ -116,7 +116,7 @@ public class Memory implements DBFileSystem {
 	}
 
 	@Override
-	public boolean addRecord(String tableName,
+	public synchronized boolean addRecord(String tableName,
 			Hashtable<String, String> htblColNameValue) {
 		int noOfRec = 0;
 		String tableInsertions = DBApp.getInstance().getProperties()
@@ -147,7 +147,7 @@ public class Memory implements DBFileSystem {
 	}
 
 	@Override
-	public Properties loadProperties() {
+	public synchronized Properties loadProperties() {
 		Properties prop = new Properties();
 		try {
 			if (DBApp.getDBAppProperties().exists()) {
@@ -172,7 +172,7 @@ public class Memory implements DBFileSystem {
 	}
 
 	@Override
-	public void loadMetaData() throws DBInvalidColumnNameException {
+	public synchronized void loadMetaData() throws DBInvalidColumnNameException {
 		columns = new ArrayList<Column>();
 		FileReader fr;
 		try {
@@ -194,7 +194,7 @@ public class Memory implements DBFileSystem {
 	}
 
 	@Override
-	public void appendMetaData(final Table table) {
+	public synchronized void appendMetaData(final Table table) {
 		FileWriter fw;
 		try {
 			fw = new FileWriter(DBApp.getMetaData(), true);
@@ -208,7 +208,7 @@ public class Memory implements DBFileSystem {
 	}
 
 	@Override
-	public Hashtable<Integer, Record> loadPage(String pageName) {
+	public synchronized Hashtable<Integer, Record> loadPage(String pageName) {
 		Hashtable<Integer, Record> htbl = new Hashtable<Integer, Record>();
 		try {
 			FileReader fr = new FileReader("data/" + pageName + ".csv");
@@ -242,7 +242,7 @@ public class Memory implements DBFileSystem {
 	}
 
 	@Override
-	public void deleteRecord(final String pageName, final int rowNumber) {
+	public synchronized void deleteRecord(final String pageName, final int rowNumber) {
 
 		LinkedList<String> read = new LinkedList<String>();
 
@@ -276,7 +276,7 @@ public class Memory implements DBFileSystem {
 	}
 
 	@Override
-	public void updateProperties() {
+	public synchronized void updateProperties() {
 		try {
 			FileOutputStream fos = new FileOutputStream(
 					DBApp.getDBAppProperties());
@@ -305,7 +305,7 @@ public class Memory implements DBFileSystem {
 	}
 
 	@Override
-	public void saveMetaData() {
+	public synchronized void saveMetaData() {
 		Set<Column> set = Table.getAllCoLumns();
 		FileWriter fw;
 		try {
@@ -319,7 +319,7 @@ public class Memory implements DBFileSystem {
 		}
 	}
 	
-	public String getProperty(String propertyName) {
+	public synchronized String getProperty(String propertyName) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(
 					"config/DBApp.properties")));
@@ -337,7 +337,7 @@ public class Memory implements DBFileSystem {
 	}
 
 	@Override
-	public void appendToFile(String toBeAppended,String path) {
+	public synchronized void appendToFile(String toBeAppended,String path) {
 		FileWriter fw;
 		try {
 			fw = new FileWriter(path, true);
@@ -351,7 +351,7 @@ public class Memory implements DBFileSystem {
 	}
 
 	@Override
-	public void readLog(ArrayList<String> committed,
+	public synchronized void readLog(ArrayList<String> committed,
 			Stack<String> logFileReversed) {
 		String path = Memory.getMemory().getProperty("LogfilePath");
 		try {
