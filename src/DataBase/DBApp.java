@@ -5,19 +5,11 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
 
-import Commands.CreateIndexCommand;
-import Commands.CreateTableCommand;
-import Commands.DeleteCommand;
-import Commands.InsertCommand;
-import Commands.SaveAllCommand;
-import Commands.SelectCommand;
-import Commands.UpdateCommand;
 import Exceptions.DBEngineException;
 import Exceptions.DBInvalidColumnNameException;
 import Interfaces.DBAppInterface;
 import Interfaces.DBFileSystem;
-import Interfaces.DBNonQueryCommand;
-import Interfaces.DBQueryCommand;
+import Transactions.TransactionManager;
 import Utilities.Memory;
 import Utilities.Table;
 
@@ -25,6 +17,8 @@ import Utilities.Table;
 public class DBApp implements DBAppInterface {
 	private static DBFileSystem fileSystem = Memory.getMemory();
 	private static DBApp dBApp = new DBApp();
+	private static TransactionManager transactionManager = TransactionManager
+			.getTransactionManager();
 
 	public static final String MaximumRowsCountinPage = "MaximumRowsCountinPage",
 			BPlusTreeN = "BPlusTreeN";
@@ -65,61 +59,46 @@ public class DBApp implements DBAppInterface {
 			Hashtable<String, String> htblColNameType,
 			Hashtable<String, String> htblColNameRefs, String strKeyColName)
 			throws DBEngineException {
-		DBNonQueryCommand createTableCommand = new CreateTableCommand(
-				strTableName, htblColNameType, htblColNameRefs, strKeyColName);
-		createTableCommand.execute();
-		fileSystem.createTable(strTableName, htblColNameType, htblColNameRefs,
-				strKeyColName);
+		getTransactionManager().createTable(strTableName, htblColNameType, htblColNameRefs, strKeyColName);
 	}
 
 	@Override
 	public void createIndex(String strTableName, String strColName)
 			throws DBEngineException {
-		DBNonQueryCommand createIndexCommand = new CreateIndexCommand(
-				strTableName, strColName);
-		createIndexCommand.execute();
+		getTransactionManager().createIndex(strTableName, strColName);
 	}
 
 	@Override
 	public void insertIntoTable(String strTableName,
 			Hashtable<String, String> htblColNameValue)
 			throws DBEngineException {
-		DBNonQueryCommand insertCommand = new InsertCommand(strTableName,
-				htblColNameValue);
-		insertCommand.execute();
+		getTransactionManager().insertIntoTable(strTableName, htblColNameValue);
 	}
 
 	@Override
 	public void updateTable(String strTableName,
 			Hashtable<String, String> htblColNameValue)
 			throws DBEngineException {
-		DBNonQueryCommand updateCommand = new UpdateCommand(strTableName,
-				htblColNameValue);
-		updateCommand.execute();
+		getTransactionManager().updateTable(strTableName, htblColNameValue);
 	}
 
 	@Override
 	public void deleteFromTable(String strTableName,
 			Hashtable<String, String> htblColNameValue, String strOperator)
 			throws DBEngineException {
-		DBNonQueryCommand deleteCommand = new DeleteCommand(strTableName,
-				htblColNameValue, strOperator);
-		deleteCommand.execute();
+		getTransactionManager().deleteFromTable(strTableName, htblColNameValue, strOperator);
 	}
 
 	@Override
 	public Iterator selectFromTable(String strTable,
 			Hashtable<String, String> htblColNameValue, String strOperator)
 			throws DBEngineException {
-		DBQueryCommand queryCommand = new SelectCommand(strTable,
-				htblColNameValue, strOperator);
-		return queryCommand.execute();
+		return getTransactionManager().selectFromTable(strTable, htblColNameValue, strOperator);
 	}
 
 	@Override
 	public void saveAll() throws DBEngineException {
-		DBNonQueryCommand saveAllCommand = new SaveAllCommand(metaData);
-		saveAllCommand.execute();
+		getTransactionManager().saveAll();
 	}
 
 	public int getBPlusTreeN() {
@@ -138,4 +117,7 @@ public class DBApp implements DBAppInterface {
 		return properties;
 	}
 
+	public TransactionManager getTransactionManager() {
+		return transactionManager;
+	}
 }
