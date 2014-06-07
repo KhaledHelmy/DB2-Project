@@ -1,9 +1,9 @@
 package Parser;
 
 import gudusoft.gsqlparser.stmt.TDeleteSqlStatement;
-import Interfaces.StatmentParserInterface;
+import Interfaces.StatementParserInterface;
 
-public class DeleteParser implements StatmentParserInterface {
+public class DeleteParser implements StatementParserInterface {
 	private TDeleteSqlStatement stmnt;
 
 	public DeleteParser(TDeleteSqlStatement stmnt) {

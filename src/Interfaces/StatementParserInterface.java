@@ -2,6 +2,6 @@ package Interfaces;
 
 import Exceptions.DBAppException;
 
-public interface StatmentParserInterface {
+public interface StatementParserInterface {
 	public String parse() throws DBAppException;
 }

@@ -1,11 +1,11 @@
 package Parser;
 
 import gudusoft.gsqlparser.stmt.TCreateIndexSqlStatement;
+import DataBase.DBApp;
 import Exceptions.DBAppException;
-import Interfaces.StatmentParserInterface;
-import Team3.DBApp;
+import Interfaces.StatementParserInterface;
 
-public class IndexParser implements StatmentParserInterface {
+public class IndexParser implements StatementParserInterface {
 	private TCreateIndexSqlStatement stmnt;
 	private DBApp dbEngine = DBApp.getInstance();
 

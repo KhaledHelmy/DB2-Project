@@ -1,19 +1,16 @@
 package Parser;
 
-import java.util.Hashtable;
-
-import javax.swing.DebugGraphics;
-
 import gudusoft.gsqlparser.nodes.TColumnDefinition;
-import gudusoft.gsqlparser.nodes.TConstant;
 import gudusoft.gsqlparser.nodes.TConstraint;
 import gudusoft.gsqlparser.stmt.TCreateTableSqlStatement;
-import Exceptions.DBEngineException;
-import Exceptions.SyntaxErrorException;
-import Interfaces.StatmentParserInterface;
-import Team3.DBApp;
 
-public class CreateParser implements StatmentParserInterface {
+import java.util.Hashtable;
+
+import DataBase.DBApp;
+import Exceptions.DBEngineException;
+import Interfaces.StatementParserInterface;
+
+public class CreateParser implements StatementParserInterface {
 	private TCreateTableSqlStatement stmnt;
 	private DBApp dbEngine = DBApp.getInstance();
 

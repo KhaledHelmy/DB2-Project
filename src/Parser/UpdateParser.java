@@ -1,9 +1,9 @@
 package Parser;
 
 import gudusoft.gsqlparser.stmt.TUpdateSqlStatement;
-import Interfaces.StatmentParserInterface;
+import Interfaces.StatementParserInterface;
 
-public class UpdateParser implements StatmentParserInterface {
+public class UpdateParser implements StatementParserInterface {
 	private TUpdateSqlStatement stmnt;
 
 	public UpdateParser(TUpdateSqlStatement stmnt) {
