@@ -1,5 +1,11 @@
 package Parser;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 import gudusoft.gsqlparser.EDbVendor;
 import gudusoft.gsqlparser.TCustomSqlStatement;
 import gudusoft.gsqlparser.TGSqlParser;
@@ -11,7 +17,7 @@ import gudusoft.gsqlparser.stmt.TSelectSqlStatement;
 import gudusoft.gsqlparser.stmt.TUpdateSqlStatement;
 import Exceptions.DBAppException;
 import Exceptions.SyntaxErrorException;
-import Exceptions.UnsupportedStatmentException;
+import Exceptions.UnsupportedStatementException;
 import Interfaces.ParserInterface;
 
 public class Parser implements ParserInterface {
@@ -28,13 +34,28 @@ public class Parser implements ParserInterface {
 			throw new SyntaxErrorException(sqlparser.getErrormessage());
 		for (int i = 0; i < sqlparser.sqlstatements.size(); i++) {
 			analyzeStmt(sqlparser.sqlstatements.get(i));
-			System.out.println("");
 		}
 	}
 
 	@Override
-	public void parseFile(String statements) throws DBAppException {
-
+	public void parseFile(String filePath) throws DBAppException {
+		File f = new File(filePath);
+		if (!f.exists())
+			throw new DBAppException("The File " + filePath + " doesnot exist");
+		try {
+			BufferedReader bf = new BufferedReader(new FileReader(f));
+			String statements = "";
+			while (bf.ready()) {
+				statements += bf.readLine();
+			}
+			bf.close();
+			parse(statements);
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+			throw new DBAppException(
+					"Something went wrong while rading from the file "
+							+ filePath);
+		}
 	}
 
 	@Override
@@ -59,7 +80,7 @@ public class Parser implements ParserInterface {
 			new SelectParser((TSelectSqlStatement) stmnt).parse();
 			break;
 		default:
-			throw new UnsupportedStatmentException(
+			throw new UnsupportedStatementException(
 					stmnt.sqlstatementtype.toString());
 		}
 	}
