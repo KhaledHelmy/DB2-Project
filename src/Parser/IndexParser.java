@@ -7,7 +7,6 @@ import Interfaces.StatementParserInterface;
 
 public class IndexParser implements StatementParserInterface {
 	private TCreateIndexSqlStatement stmnt;
-	private DBApp dbEngine = DBApp.getInstance();
 
 	public IndexParser(TCreateIndexSqlStatement stmnt) {
 		this.stmnt = stmnt;

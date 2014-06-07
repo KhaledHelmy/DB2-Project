@@ -12,7 +12,6 @@ import Interfaces.StatementParserInterface;
 
 public class CreateParser implements StatementParserInterface {
 	private TCreateTableSqlStatement stmnt;
-	private DBApp dbEngine = DBApp.getInstance();
 
 	public CreateParser(TCreateTableSqlStatement stmnt) {
 		this.stmnt = stmnt;

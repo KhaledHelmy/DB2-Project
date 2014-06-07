@@ -11,7 +11,6 @@ import Utilities.Table;
 
 public class InsertParser implements StatementParserInterface {
 	private TInsertSqlStatement stmnt;
-	private DBApp dbEngine = DBApp.getInstance();
 
 	public InsertParser(TInsertSqlStatement stmnt) {
 		this.stmnt = stmnt;
