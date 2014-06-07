@@ -14,10 +14,22 @@ public class RecoveryManager implements RecoveryManagerInterface {
 	ArrayList<String> committed = new ArrayList<String>(); //names of committed transactions
 	Stack<String> logFileReversed = new Stack<String>();
 	Stack<String> logFileMa3dool = new Stack<String>();
+	static RecoveryManager recoveryManager = null;
 
 	public static void main(String[] args) {
 		RecoveryManagerInterface x = new RecoveryManager();
 		x.recover();
+	}
+	
+	private RecoveryManager() {
+		
+	}
+	
+	public static RecoveryManager getInstance() {
+		if (recoveryManager==null) {
+			recoveryManager=new RecoveryManager();
+		}
+		return recoveryManager;
 	}
 
 	@Override
