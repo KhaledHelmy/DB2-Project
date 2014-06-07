@@ -23,16 +23,16 @@ public class TransactionManager {
 	private LogManager logManager;
 	private static TransactionManager transactionManager = null;
 
-	public static TransactionManager getTransactionManager() {
+	private static TransactionManager getTransactionManager() {
 		return transactionManager;
 	}
 
-	public static void setTransactionManager(
+	private static void setTransactionManager(
 			TransactionManager transactionManager) {
 		TransactionManager.transactionManager = transactionManager;
 	}
 
-	public TransactionManager getInstance() {
+	public static TransactionManager getInstance() {
 		if (getTransactionManager() == null) {
 			setTransactionManager(new TransactionManager());
 			getTransactionManager().init();
