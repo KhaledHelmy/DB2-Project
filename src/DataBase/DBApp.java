@@ -11,6 +11,7 @@ import Commands.DeleteCommand;
 import Commands.InsertCommand;
 import Commands.SaveAllCommand;
 import Commands.SelectCommand;
+import Commands.UpdateCommand;
 import Exceptions.DBEngineException;
 import Exceptions.DBInvalidColumnNameException;
 import Interfaces.DBAppInterface;
@@ -86,6 +87,15 @@ public class DBApp implements DBAppInterface {
 		DBNonQueryCommand insertCommand = new InsertCommand(strTableName,
 				htblColNameValue);
 		insertCommand.execute();
+	}
+
+	@Override
+	public void updateTable(String strTableName,
+			Hashtable<String, String> htblColNameValue)
+			throws DBEngineException {
+		DBNonQueryCommand updateCommand = new UpdateCommand(strTableName,
+				htblColNameValue);
+		updateCommand.execute();
 	}
 
 	@Override
