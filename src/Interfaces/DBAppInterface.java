@@ -21,10 +21,6 @@ public interface DBAppInterface {
 
 	public void insertIntoTable(String strTableName,
 			Hashtable<String, String> htblColNameValue) throws DBEngineException;
-
-	public void updateTable(String strTableName,
-			Hashtable<String,String> htblColNameValue)
-			throws DBEngineException;
 	
 	public void deleteFromTable(String strTableName,
 			Hashtable<String, String> htblColNameValue, String strOperator)
@@ -35,4 +31,9 @@ public interface DBAppInterface {
 			throws DBEngineException;
 
 	public void saveAll() throws DBEngineException;
+
+	void updateTable(String strTableName,
+			Hashtable<String, String> htblColNameValueUpdate,
+			Hashtable<String, String> htblColNameValueCondition,
+			String strOperator) throws DBEngineException;
 }

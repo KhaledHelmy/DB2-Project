@@ -89,10 +89,11 @@ public class TransactionManager {
 	}
 
 	public void updateTable(String strTableName,
-			Hashtable<String, String> htblColNameValue)
-			throws DBEngineException {
+			Hashtable<String, String> htblColNameValue,
+			Hashtable<String, String> htblColNameValueCondition,
+			String strOperator) throws DBEngineException {
 		DBNonQueryCommand updateCommand = new UpdateCommand(strTableName,
-				htblColNameValue);
+				htblColNameValue, htblColNameValueCondition, strOperator);
 		updateCommand.execute();
 	}
 

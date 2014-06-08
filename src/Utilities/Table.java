@@ -466,7 +466,8 @@ public class Table {
 		updateBPlusTrees(htblColNameValue, getTotalNumberOfInsertions() - 1);
 	}
 
-	public void updateRecord(Hashtable<String, String> htblColNameValue)
+	public void updateRecord(Hashtable<String, String> htblColNameValue,
+			Hashtable<String, String> htblColNameValueCondition, String strOperator)
 			throws DBEngineException {
 		for (String key : htblColNameValue.keySet()) {
 			if (!isColName(key)) {

@@ -59,7 +59,8 @@ public class DBApp implements DBAppInterface {
 			Hashtable<String, String> htblColNameType,
 			Hashtable<String, String> htblColNameRefs, String strKeyColName)
 			throws DBEngineException {
-		getTransactionManager().createTable(strTableName, htblColNameType, htblColNameRefs, strKeyColName);
+		getTransactionManager().createTable(strTableName, htblColNameType,
+				htblColNameRefs, strKeyColName);
 	}
 
 	@Override
@@ -77,23 +78,27 @@ public class DBApp implements DBAppInterface {
 
 	@Override
 	public void updateTable(String strTableName,
-			Hashtable<String, String> htblColNameValue)
-			throws DBEngineException {
-		getTransactionManager().updateTable(strTableName, htblColNameValue);
+			Hashtable<String, String> htblColNameValueUpdate,
+			Hashtable<String, String> htblColNameValueCondition,
+			String strOperator) throws DBEngineException {
+		getTransactionManager().updateTable(strTableName,
+				htblColNameValueUpdate, htblColNameValueCondition, strOperator);
 	}
 
 	@Override
 	public void deleteFromTable(String strTableName,
 			Hashtable<String, String> htblColNameValue, String strOperator)
 			throws DBEngineException {
-		getTransactionManager().deleteFromTable(strTableName, htblColNameValue, strOperator);
+		getTransactionManager().deleteFromTable(strTableName, htblColNameValue,
+				strOperator);
 	}
 
 	@Override
 	public Iterator selectFromTable(String strTable,
 			Hashtable<String, String> htblColNameValue, String strOperator)
 			throws DBEngineException {
-		return getTransactionManager().selectFromTable(strTable, htblColNameValue, strOperator);
+		return getTransactionManager().selectFromTable(strTable,
+				htblColNameValue, strOperator);
 	}
 
 	@Override
