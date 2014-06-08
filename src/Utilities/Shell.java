@@ -3,6 +3,7 @@ package Utilities;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import DataBase.DBApp;
 import Exceptions.DBAppException;
 import Parser.Parser;
 
@@ -17,10 +18,11 @@ public class Shell {
 	public Shell() throws IOException {
 		out = new PrintWriter(System.out);
 		reader = new ConsoleReader();
-		parser = new Parser();
 	}
 
 	public void start() throws IOException {
+		parser = new Parser(this);
+		DBApp.getInstance();
 		while (true) {
 			try {
 				readHandler(read());
@@ -35,7 +37,7 @@ public class Shell {
 		}
 	}
 
-	private void write(String message) throws IOException {
+	public void write(String message) throws IOException {
 		out.println(message);
 		out.println();
 		out.flush();

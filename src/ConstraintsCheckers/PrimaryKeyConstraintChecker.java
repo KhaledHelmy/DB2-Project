@@ -10,7 +10,6 @@ public class PrimaryKeyConstraintChecker implements ConstraintsChecker{
 		Table table = Table.getInstance(tableName);
 		String primaryKeyName = table.getKeyColName();
 		String value = params.get(primaryKeyName);
-		
 		if(value.equalsIgnoreCase("null")){
 			return false;
 		}

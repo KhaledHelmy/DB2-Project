@@ -8,5 +8,5 @@ public interface ParserInterface {
 
 	public void parseFile(String statements) throws DBAppException;
 
-	public void analyzeStmt(TCustomSqlStatement stmnt) throws DBAppException;
+	public String analyzeStmt(TCustomSqlStatement stmnt) throws DBAppException;
 }

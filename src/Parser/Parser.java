@@ -1,11 +1,5 @@
 package Parser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-
 import gudusoft.gsqlparser.EDbVendor;
 import gudusoft.gsqlparser.TCustomSqlStatement;
 import gudusoft.gsqlparser.TGSqlParser;
@@ -15,14 +9,24 @@ import gudusoft.gsqlparser.stmt.TDeleteSqlStatement;
 import gudusoft.gsqlparser.stmt.TInsertSqlStatement;
 import gudusoft.gsqlparser.stmt.TSelectSqlStatement;
 import gudusoft.gsqlparser.stmt.TUpdateSqlStatement;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 import Exceptions.DBAppException;
 import Exceptions.SyntaxErrorException;
 import Exceptions.UnsupportedStatementException;
 import Interfaces.ParserInterface;
+import Utilities.Shell;
 
 public class Parser implements ParserInterface {
+	private Shell shell;
 
-	public Parser() {
+	public Parser(Shell s) {
+		shell = s;
 	}
 
 	@Override
@@ -33,7 +37,11 @@ public class Parser implements ParserInterface {
 		if (ret != 0)
 			throw new SyntaxErrorException(sqlparser.getErrormessage());
 		for (int i = 0; i < sqlparser.sqlstatements.size(); i++) {
-			analyzeStmt(sqlparser.sqlstatements.get(i));
+			try {
+				shell.write(analyzeStmt(sqlparser.sqlstatements.get(i)));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -59,26 +67,20 @@ public class Parser implements ParserInterface {
 	}
 
 	@Override
-	public void analyzeStmt(TCustomSqlStatement stmnt) throws DBAppException {
+	public String analyzeStmt(TCustomSqlStatement stmnt) throws DBAppException {
 		switch (stmnt.sqlstatementtype) {
 		case sstcreatetable:
-			new CreateParser((TCreateTableSqlStatement) stmnt).parse();
-			break;
+			return new CreateParser((TCreateTableSqlStatement) stmnt).parse();
 		case sstcreateindex:
-			new IndexParser((TCreateIndexSqlStatement) stmnt).parse();
-			break;
+			return new IndexParser((TCreateIndexSqlStatement) stmnt).parse();
 		case sstinsert:
-			new InsertParser((TInsertSqlStatement) stmnt).parse();
-			break;
+			return new InsertParser((TInsertSqlStatement) stmnt).parse();
 		case sstupdate:
-			new UpdateParser((TUpdateSqlStatement) stmnt).parse();
-			break;
+			return new UpdateParser((TUpdateSqlStatement) stmnt).parse();
 		case sstdelete:
-			new DeleteParser((TDeleteSqlStatement) stmnt).parse();
-			break;
+			return new DeleteParser((TDeleteSqlStatement) stmnt).parse();
 		case sstselect:
-			new SelectParser((TSelectSqlStatement) stmnt).parse();
-			break;
+			return new SelectParser((TSelectSqlStatement) stmnt).parse();
 		default:
 			throw new UnsupportedStatementException(
 					stmnt.sqlstatementtype.toString());

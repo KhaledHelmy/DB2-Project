@@ -51,4 +51,6 @@ public interface DBFileSystem {
 	public void appendToFile(String toBeAppended,String path);
 	
 	public void readLog(ArrayList<String> committed, Stack<String> logFileReversed);
+
+	public Properties getProperties();
 }

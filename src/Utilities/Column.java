@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Column {
-	private String tableName, colName, colType, reference, referencedTableName, referencedColumnName;
+	private String tableName, colName, colType, reference, referencedTableName,
+			referencedColumnName;
 	private List<String> referenceBack = new ArrayList<String>();
 
 	public String getReferencedColumnName() {
@@ -31,7 +32,7 @@ public class Column {
 	 */
 	public Column(String col) {
 		String temp[] = col.trim().split(",");
-		for(int i = 0; i < temp.length; i++){
+		for (int i = 0; i < temp.length; i++) {
 			temp[i] = temp[i].trim();
 		}
 		setTableName(temp[0]);
@@ -39,20 +40,19 @@ public class Column {
 		setColType(temp[2]);
 		setKey(Boolean.parseBoolean(temp[3]));
 		setIndex(Boolean.parseBoolean(temp[4]));
-		if(temp.length == 6 && !temp[5].equalsIgnoreCase("null")){
+		if (temp.length == 6 && !temp[5].equalsIgnoreCase("null")) {
 			setReference(temp[5]);
 			hasReference = true;
-		}
-		else{
+		} else {
 			setReference("");
 			hasReference = false;
 		}
 	}
 
-	public boolean HasReference(){
+	public boolean HasReference() {
 		return hasReference;
 	}
-	
+
 	public String getTableName() {
 		return tableName;
 	}
@@ -76,10 +76,12 @@ public class Column {
 	public void setReference(String reference) {
 		this.reference = reference;
 		String[] referenceSplit = reference.split("\\.");
-		if(referenceSplit.length == 2){
+		if (referenceSplit.length == 2) {
 			setReferencedTableName(referenceSplit[0]);
 			setReferencedColumnName(referenceSplit[1]);
 		}
+		if (reference.isEmpty())
+			this.reference = "null";
 	}
 
 	public boolean isKey() {
@@ -111,12 +113,12 @@ public class Column {
 				+ Boolean.toString(key) + ", " + Boolean.toString(index) + ", "
 				+ reference;
 	}
-	
-	public void addReferenceBack(String reference){
+
+	public void addReferenceBack(String reference) {
 		referenceBack.add(reference);
 	}
-	
-	public List<String> getReferenceBack(){
+
+	public List<String> getReferenceBack() {
 		return referenceBack;
 	}
 }

@@ -1,8 +1,8 @@
 package Abtracts;
 
 import gudusoft.gsqlparser.EExpressionType;
+import gudusoft.gsqlparser.TCustomSqlStatement;
 import gudusoft.gsqlparser.nodes.TExpression;
-import gudusoft.gsqlparser.stmt.TDeleteSqlStatement;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,8 +12,8 @@ import Exceptions.DBEngineException;
 import Interfaces.StatementParserInterface;
 
 public abstract class ConditionalParsers implements StatementParserInterface {
-	protected TDeleteSqlStatement stmnt;
-	protected String operator;
+	protected TCustomSqlStatement stmnt;
+	protected String operator = "and";
 
 	protected List<TExpression> check() throws DBEngineException {
 		HashSet<String> set = new HashSet<String>();

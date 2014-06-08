@@ -20,16 +20,15 @@ public class InsertParser implements StatementParserInterface {
 	public String parse() throws DBEngineException {
 		String tableName = stmnt.getTargetTable().getTableName().toString();
 		Hashtable<String, String> htblColNameValue = new Hashtable<String, String>();
-		if (stmnt.getColumnList().size() == 0)
+		if (stmnt.getColumnList() == null || stmnt.getColumnList().size() == 0)
 			ColumnsNotStated(tableName, htblColNameValue);
 		else
-			ColumnsStated(tableName, htblColNameValue);
+			ColumnsStated(htblColNameValue);
 		dbEngine.insertIntoTable(tableName, htblColNameValue);
 		return "The Values has been inserted into the table " + tableName;
 	}
 
-	private void ColumnsStated(String tableName,
-			Hashtable<String, String> htblColNameValue)
+	private void ColumnsStated(Hashtable<String, String> htblColNameValue)
 			throws DBEngineException {
 		try {
 			for (int i = 0; i < stmnt.getColumnList().size(); i++) {
@@ -47,15 +46,19 @@ public class InsertParser implements StatementParserInterface {
 	private void ColumnsNotStated(String tableName,
 			Hashtable<String, String> htblColNameValue) {
 		try {
-			Set<String> columns = Table.getInstance(tableName).getColsName();
+			Table table = Table.getInstance(tableName);
+			if (table == null)
+				return;
+			Set<String> columns = table.getColsName();
 			String[] cols = columns.toArray(new String[columns.size()]);
 			for (int i = 0; i < cols.length; i++) {
 				String value = stmnt.getValues().getMultiTarget(0)
 						.getColumnList().getResultColumn(i).toString();
-				htblColNameValue.put(tableName, value);
+				htblColNameValue.put(cols[i], value);
 			}
 		} catch (Exception e) { // Made especially for null pointer
 			// exception
+//			 e.printStackTrace();
 		}
 	}
 }

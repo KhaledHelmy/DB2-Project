@@ -27,6 +27,7 @@ public class Memory implements DBFileSystem {
 
 	public static Memory memory = null;
 	private List<Column> columns;
+	private Properties properties;
 
 	private Memory() {
 		init();
@@ -168,6 +169,7 @@ public class Memory implements DBFileSystem {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		properties = prop;
 		return prop;
 	}
 
@@ -242,7 +244,8 @@ public class Memory implements DBFileSystem {
 	}
 
 	@Override
-	public synchronized void deleteRecord(final String pageName, final int rowNumber) {
+	public synchronized void deleteRecord(final String pageName,
+			final int rowNumber) {
 
 		LinkedList<String> read = new LinkedList<String>();
 
@@ -318,37 +321,23 @@ public class Memory implements DBFileSystem {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public synchronized String getProperty(String propertyName) {
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(new File(
-					"config/DBApp.properties")));
-			String line;
-			while ((!((line = br.readLine()).split("=")[0] == null))
-					&& (!line.split("=")[0].equals(propertyName)))
-				;
-			String propertyValue = line.split("=")[1];
-			br.close();
-			return propertyValue;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return properties.getProperty(propertyName);
 	}
 
 	@Override
-	public synchronized void appendToFile(String toBeAppended,String path) {
+	public synchronized void appendToFile(String toBeAppended, String path) {
 		FileWriter fw;
 		try {
-			System.out.println("path hwa"+path);
+			System.out.println("path hwa" + path);
 			fw = new FileWriter(path, true);
 			fw.append(toBeAppended);
 			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
 	@Override
@@ -356,16 +345,17 @@ public class Memory implements DBFileSystem {
 			Stack<String> logFileReversed) {
 		String path = Memory.getMemory().getProperty("LogfilePath");
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(new File(path)));
+			BufferedReader br = new BufferedReader(new FileReader(
+					new File(path)));
 			String line;
-			while ((line = br.readLine())!=null) {
-				if (line.split(",")[0]!=null&&line.split(",")[0].equals("start")) {
+			while ((line = br.readLine()) != null) {
+				if (line.split(",")[0] != null
+						&& line.split(",")[0].equals("start")) {
 					continue;
-				}
-				else if (line.split(",")[0]!=null&&line.split(",")[0].equals("commit")) {
+				} else if (line.split(",")[0] != null
+						&& line.split(",")[0].equals("commit")) {
 					committed.add(line.split(",")[1]);
-				}
-				else {
+				} else {
 					logFileReversed.push(line);
 				}
 			}
@@ -374,6 +364,12 @@ public class Memory implements DBFileSystem {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
+
+	@Override
+	public Properties getProperties() {
+		return properties;
+	}
+
 }
