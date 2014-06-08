@@ -1,20 +1,15 @@
 package Parser;
 
 import gudusoft.gsqlparser.nodes.TExpression;
-import gudusoft.gsqlparser.nodes.TResultColumn;
 import gudusoft.gsqlparser.stmt.TUpdateSqlStatement;
 
 import java.util.Hashtable;
 import java.util.List;
 
-import javax.sound.midi.Track;
-
 import Abtracts.ConditionalParsers;
-import DataBase.DBApp;
 import Exceptions.DBEngineException;
 
 public class UpdateParser extends ConditionalParsers {
-	private TUpdateSqlStatement stmnt;
 
 	public UpdateParser(TUpdateSqlStatement stmnt) {
 		this.stmnt = stmnt;

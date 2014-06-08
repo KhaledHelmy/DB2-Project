@@ -466,42 +466,34 @@ public class Table {
 		updateBPlusTrees(htblColNameValue, getTotalNumberOfInsertions() - 1);
 	}
 
-	public void updateRecord(Hashtable<String, String> htblColNameValue,
-			Hashtable<String, String> htblColNameValueCondition, String strOperator)
-			throws DBEngineException {
-		for (String key : htblColNameValue.keySet()) {
-			if (!isColName(key)) {
-				throw new DBEngineException(key + " is not a column in table "
-						+ getName());
+	public List updateRecord(Hashtable<String, String> htblColNameValue,
+			Hashtable<String, String> htblColNameValueCondition,
+			String strOperator) throws DBEngineException {
+		Iterator recordsToUpdate = query(htblColNameValueCondition, strOperator);
+		List<Hashtable<String, String>> oldrecVals = new ArrayList<Hashtable<String, String>>();
+		while (recordsToUpdate.hasNext()) {
+			Hashtable<String, String> hash = new Hashtable<String, String>();
+			oldrecVals.add(hash);
+			Record rec = (Record) recordsToUpdate.next();
+			Table table = Table.getInstance(rec.getPageName().split("_")[0]);
+			System.out.println(table.getName());
+			String keystr = table.getKeyColName();
+			for (String s : rec.getHtblColNameValue().keySet()) {
+				hash.put(s, rec.getValue(s));
+				System.out.println(s + "DAta");
+				if (s.equals(keystr))
+					continue;
+				if (htblColNameValue.get(s) == null)
+					continue;
+				if (table.getColumn(s).isIndex()) {
+					table.getBPlusTree(s).ourDelete(rec);
+					table.getBPlusTree(s).ourInsert(rec);
+				}
+				rec.getHtblColNameValue().put(s, htblColNameValue.get(s));
 			}
+			rec.update();
 		}
-
-		for (String key : getColumns().keySet()) {
-			String value = htblColNameValue.get(key);
-			htblColNameValue.put(key, value + "");
-		}
-
-		// Check Constraints
-		ConstraintsChecker constraintsChecker = ConstraintsCheckerFactory
-				.getInstance(ConstraintsCheckersType.InsertConstraintChecker);
-		constraintsChecker.check(getName(), htblColNameValue);
-
-		// if(!constraintsChecker.check(getName(), htblColNameValue)){
-		// / Raise some error (exception or return false or just play dead)
-		// }
-
-		// Insert in files
-		DBApp.getFileSystem().addRecord(getName(), htblColNameValue);
-
-		// Mark page as not loaded
-		int pageNumber = getNumberOfPages() - 1;
-		unloadPage(pageNumber);
-
-		// Increment number of total insertions
-		incrementTotalNumberOfInsertions();
-
-		// Insert in B+ trees
-		updateBPlusTrees(htblColNameValue, getTotalNumberOfInsertions() - 1);
+		return oldrecVals;
 	}
 
 	public Iterator query(Hashtable<String, String> htblColNameValue,

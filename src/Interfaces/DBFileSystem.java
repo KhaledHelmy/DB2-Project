@@ -53,4 +53,6 @@ public interface DBFileSystem {
 	public void readLog(ArrayList<String> committed, Stack<String> logFileReversed);
 
 	public Properties getProperties();
+	
+	public void updateRecord(String pageName, int rowNumber, String recVal);
 }

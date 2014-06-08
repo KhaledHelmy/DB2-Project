@@ -28,7 +28,6 @@ public class UpdateCommand implements DBNonQueryCommand {
 			throw new DBEngineException("Table " + strTableName
 					+ " doesn't Exist");
 		}
-
 		table.updateRecord(htblColNameValueUpdate, htblColNameValueCondition,
 				strOperator);
 	}

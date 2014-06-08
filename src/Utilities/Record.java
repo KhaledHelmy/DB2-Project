@@ -12,6 +12,7 @@ import Interfaces.DBFileSystem;
 public class Record {
 	private String pageName;
 	private boolean active = true;
+
 	public void setActive(boolean active) {
 		this.active = active;
 	}
@@ -19,18 +20,19 @@ public class Record {
 	private int insertionId;
 	private Hashtable<String, String> htblColNameValue;
 
-	public Record(Hashtable<String, String> htblColNameValue, String pageName, int insertionId) {
+	public Record(Hashtable<String, String> htblColNameValue, String pageName,
+			int insertionId) {
 		this.htblColNameValue = htblColNameValue;
 		this.pageName = pageName;
 		this.insertionId = insertionId;
 	}
 
-	public static Record createRecord(String input, String pageName, int insertionId)
-			throws DBEngineException {
+	public static Record createRecord(String input, String pageName,
+			int insertionId) throws DBEngineException {
 		Hashtable<String, String> colNameValue = new Hashtable<String, String>();
 		String tableName = pageName.split("_")[0];
 		String[] values = input.trim().split(",");
-		for(int i = 0; i < values.length; i++){
+		for (int i = 0; i < values.length; i++) {
 			values[i] = values[i].trim();
 		}
 		TreeSet<String> set = Table.getInstance(tableName).getColsName();
@@ -46,13 +48,15 @@ public class Record {
 		String value = htblColNameValue.get(column);
 		return htblColNameValue.get(column);
 	}
-	public void setColumnValue(String colName,String colVal){
-		htblColNameValue.put(colName,colVal);
+
+	public void setColumnValue(String colName, String colVal) {
+		htblColNameValue.put(colName, colVal);
 	}
 
 	public void delete() {
 		DBFileSystem memory = DBApp.getFileSystem();
-		memory.deleteRecord(pageName, insertionId % DBApp.getInstance().getMaximumRowsCountinPage());
+		memory.deleteRecord(pageName, insertionId
+				% DBApp.getInstance().getMaximumRowsCountinPage());
 		active = false;
 	}
 
@@ -94,5 +98,13 @@ public class Record {
 
 	public void deactivate() {
 		setActive(false);
+	}
+
+	public void update() {
+		System.out.println("Record Update");
+		DBFileSystem memory = DBApp.getFileSystem();
+		memory.updateRecord(pageName, insertionId
+				% DBApp.getInstance().getMaximumRowsCountinPage(), toString());
+		active = false;
 	}
 }

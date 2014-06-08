@@ -67,6 +67,7 @@ public class OurBPlusTree {
 
 	public void ourDelete(Record record) {
 		String rows = (String) find(record.getValue(getColName()));
+		System.out.println(rows);
 		String row = record.getRowNumber() + "";
 		int index = rows.indexOf(row);
 		String insert = null;

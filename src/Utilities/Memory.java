@@ -358,7 +358,7 @@ public class Memory implements DBFileSystem {
 					logFileReversed.push(line);
 				}
 			}
-			//System.out.println(logFileReversed.toString());
+			// System.out.println(logFileReversed.toString());
 			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -369,6 +369,37 @@ public class Memory implements DBFileSystem {
 	@Override
 	public Properties getProperties() {
 		return properties;
+	}
+
+	@Override
+	public void updateRecord(String pageName, int rowNumber, String recVal) {
+		LinkedList<String> read = new LinkedList<String>();
+		System.out.println(recVal);
+		try {
+			FileReader fr = new FileReader("data/" + pageName + ".csv");
+			BufferedReader bf = new BufferedReader(fr);
+			while (bf.ready())
+				read.addLast(bf.readLine());
+			fr.close();
+			bf.close();
+			FileWriter fw = new FileWriter("data/" + pageName + ".csv");
+
+			String append = "";
+			for (int i = 0; !read.isEmpty() && i < rowNumber; i++)
+				append += read.removeFirst() + "\n";
+			if (!read.isEmpty()) {
+				read.removeFirst();
+				append += recVal + "\n";
+			}
+			while (!read.isEmpty())
+				append += read.removeFirst() + "\n";
+			fw.append(append);
+			fw.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
