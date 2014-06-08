@@ -60,4 +60,8 @@ public class Page {
 		}
 		return found;
 	}
+	
+	public void setRecords(Hashtable<Integer, Record> records) {
+		this.records = records;
+	}
 }

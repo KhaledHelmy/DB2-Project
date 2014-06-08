@@ -4,7 +4,7 @@ import Transactions.Transaction;
 import Utilities.Page;
 import Utilities.PageID;
 import Abstracts.Step;
-import Components.BufferManager.BufferManager;
+import BufferManager.BufferManager;
 import Exceptions.DBEngineException;
 
 public class PageWrite extends Step {

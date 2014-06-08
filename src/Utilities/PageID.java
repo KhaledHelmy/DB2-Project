@@ -28,4 +28,13 @@ public class PageID {
 	public String getPageName() {
 		return tableName + "_" + pageNum + ".csv";
 	}
+	
+	public String getPageNameTrimmed() {
+		return tableName + "_" + pageNum;
+	}
+	
+	public boolean equals(Object o) {
+		PageID p = (PageID) o;
+		return this.tableName.equals(p.tableName) && this.pageNum.equals(p.pageNum);
+	}
 }
