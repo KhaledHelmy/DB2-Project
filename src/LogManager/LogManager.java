@@ -23,9 +23,11 @@ public class LogManager implements LogManagerInterface {
 		x.init();
 		x.recordStart("miro");
 		Hashtable<String, String> old = new Hashtable<String,String>();
-		old.put("rab3a","ramz el somood");
+		old.put("amir","brns");
+		old.put("amiro", "5ateer");
 		Hashtable<String, String> new1 = new Hashtable<String,String>();
 		new1.put("rabia","fel qalb");
+		new1.put("ana","agmad wa7d");
 		PageID pid = new PageID("3", "Taleb");
 		x.recordUpdate("miro",pid, "25-4968", "Name", old, new1);
 		x.recordInsert("miro",pid, old);

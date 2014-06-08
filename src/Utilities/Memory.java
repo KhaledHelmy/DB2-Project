@@ -340,7 +340,6 @@ public class Memory implements DBFileSystem {
 	public synchronized void appendToFile(String toBeAppended,String path) {
 		FileWriter fw;
 		try {
-			System.out.println("path hwa"+path);
 			fw = new FileWriter(path, true);
 			fw.append(toBeAppended);
 			fw.close();
@@ -369,7 +368,7 @@ public class Memory implements DBFileSystem {
 					logFileReversed.push(line);
 				}
 			}
-			System.out.println(logFileReversed.toString());
+			//System.out.println(logFileReversed.toString());
 			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
