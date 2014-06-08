@@ -37,7 +37,7 @@ public class BufferManager implements BufferManagerInterface {
 
 	public void init() {
 		setSlotSizes();
-		size = minEmptySlotSize + maxUsedSlotSize;
+		size = maxUsedSlotSize;
 		memory = new FullPage[size];
 		modified = new boolean[size];
 		LRU = new LinkedList<Integer>();
@@ -49,7 +49,28 @@ public class BufferManager implements BufferManagerInterface {
 	}
 
 	public synchronized void read(PageID pageID, Page page, boolean bModify) {
-		
+		// Set locks!
+		int slot = getSlotNumber(pageID);
+		if (slot != -1) {
+			page.setRecords(memory[slot].getPage().getRecords());
+		}
+		else {
+			slot = emptySlots.poll().intValue();
+			usedSlots.add(new Integer(slot));
+			checkSizeConstraints();
+			// Load page
+		}
+		modified[slot] = bModify;
+		Integer slotObj = new Integer(slot);
+		LRU.remove(slotObj);
+		LRU.add(slotObj);
+	}
+
+	private void checkSizeConstraints() {
+		if (emptySlots.size() == minEmptySlotSize || usedSlots.size() == maxUsedSlotSize) {
+			runLRU();
+		}
+		return;
 	}
 
 	public synchronized void write(PageID pageID, Page page) {
