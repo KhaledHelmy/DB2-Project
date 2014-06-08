@@ -51,8 +51,8 @@ public class Record {
 	}
 
 	public void delete() {
-		DBFileSystem memory = DBApp.getFileSystem();
-		memory.deleteRecord(pageName, insertionId % DBApp.getInstance().getMaximumRowsCountinPage());
+		//DBFileSystem memory = DBApp.getFileSystem();
+		//memory.deleteRecord(pageName, insertionId % DBApp.getInstance().getMaximumRowsCountinPage());
 		active = false;
 	}
 

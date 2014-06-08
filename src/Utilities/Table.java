@@ -40,6 +40,7 @@ public class Table {
 	// .setProperty(name, totalNumberOfInsertions + "");
 	// }
 
+	
 	public void incrementTotalNumberOfInsertions() {
 		totalNumberOfInsertions++;
 		DBApp.getInstance().getProperties()
@@ -357,7 +358,7 @@ public class Table {
 			}
 		}
 
-		unloadAllPages();
+		//unloadAllPages();
 	}
 
 	private String getCascadeTokenFormat(String tableName, String column,
