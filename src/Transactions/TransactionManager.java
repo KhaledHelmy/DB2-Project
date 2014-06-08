@@ -3,6 +3,7 @@ package Transactions;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import BufferManager.BufferManager;
 import Commands.CreateIndexCommand;
 import Commands.CreateTableCommand;
 import Commands.DeleteCommand;
@@ -10,7 +11,6 @@ import Commands.InsertCommand;
 import Commands.SaveAllCommand;
 import Commands.SelectCommand;
 import Commands.UpdateCommand;
-import Components.BufferManager.BufferManager;
 import DataBase.DBApp;
 import Exceptions.DBEngineException;
 import Interfaces.DBNonQueryCommand;

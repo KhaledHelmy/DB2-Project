@@ -1,4 +1,4 @@
-package Components.BufferManager;
+package BufferManager;
 
 public class BufferUpdate extends Thread {
 	public void run() {

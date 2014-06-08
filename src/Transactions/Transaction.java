@@ -3,7 +3,7 @@ package Transactions;
 import java.util.Iterator;
 import java.util.Vector;
 
-import Components.BufferManager.BufferManager;
+import BufferManager.BufferManager;
 import LogManager.LogManager;
 import Steps.Step;
 
