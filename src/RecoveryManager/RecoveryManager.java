@@ -100,6 +100,11 @@ public class RecoveryManager implements RecoveryManagerInterface {
 					//System.out.println("aaa   "+htblColVal.toString());
 					Hashtable<String,String> newObject;
 					newObject = buildHTfromString(line.split("},")[1]);
+					try {
+						dbApp.updateTable(tableName, htblColVal, newObject, "AND");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					//System.out.println("brns   "+newObj.toString());
 					//call el update hena surrounded with try/catch w pass htblColVal as newObj w newObject as oldObj
 				}
@@ -167,6 +172,11 @@ public class RecoveryManager implements RecoveryManagerInterface {
 				newObject = buildHTfromString(line.split("},")[1]);
 				//System.out.println("brns   "+newObject.toString());
 				//call el update hena surrounded with try/catch w pass htblColVal as oldObj w newObject as newObj
+				try {
+					dbApp.updateTable(tableName, newObject, htblColVal, "AND");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
