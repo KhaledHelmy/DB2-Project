@@ -60,6 +60,7 @@ public class TransactionManager {
 	public void init() {
 		setBufferManager(BufferManager.getBufferManager());
 		setLogManager(LogManager.getInstance());
+		getBufferManager().init();
 	}
 
 	public void createTable(String strTableName,

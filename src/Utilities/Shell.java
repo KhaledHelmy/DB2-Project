@@ -27,7 +27,6 @@ public class Shell {
 			try {
 				readHandler(read());
 			} catch (UnsupportedOperationException e) {
-				e.printStackTrace();
 				write("Error");
 			} catch (Exception e) {
 				if (e.getMessage() != null)

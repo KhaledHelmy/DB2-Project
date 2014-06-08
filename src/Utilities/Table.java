@@ -357,7 +357,7 @@ public class Table {
 			}
 		}
 
-		unloadAllPages();
+		// unloadAllPages();
 	}
 
 	private String getCascadeTokenFormat(String tableName, String column,
@@ -476,11 +476,9 @@ public class Table {
 			oldrecVals.add(hash);
 			Record rec = (Record) recordsToUpdate.next();
 			Table table = Table.getInstance(rec.getPageName().split("_")[0]);
-			System.out.println(table.getName());
 			String keystr = table.getKeyColName();
 			for (String s : rec.getHtblColNameValue().keySet()) {
 				hash.put(s, rec.getValue(s));
-				System.out.println(s + "DAta");
 				if (s.equals(keystr))
 					continue;
 				if (htblColNameValue.get(s) == null)
@@ -499,7 +497,8 @@ public class Table {
 	public Iterator query(Hashtable<String, String> htblColNameValue,
 			String strOperator) {
 		Iterator result = null;
-
+		if (strOperator == null)
+			strOperator = "";
 		if (htblColNameValue.size() == 0) {
 			result = getAllRecords().iterator();
 		} else if (strOperator.equalsIgnoreCase("or")) {

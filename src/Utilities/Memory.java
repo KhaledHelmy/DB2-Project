@@ -213,7 +213,10 @@ public class Memory implements DBFileSystem {
 	public synchronized Hashtable<Integer, Record> loadPage(String pageName) {
 		Hashtable<Integer, Record> htbl = new Hashtable<Integer, Record>();
 		try {
-			FileReader fr = new FileReader("data/" + pageName + ".csv");
+			File file = new File("data/" + pageName + ".csv");
+			if (!file.exists())
+				file.createNewFile();
+			FileReader fr = new FileReader(file);
 			BufferedReader bf = new BufferedReader(fr);
 			int i = 0;
 			String temp = "";
@@ -374,7 +377,6 @@ public class Memory implements DBFileSystem {
 	@Override
 	public void updateRecord(String pageName, int rowNumber, String recVal) {
 		LinkedList<String> read = new LinkedList<String>();
-		System.out.println(recVal);
 		try {
 			FileReader fr = new FileReader("data/" + pageName + ".csv");
 			BufferedReader bf = new BufferedReader(fr);

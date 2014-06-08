@@ -4,8 +4,9 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import BufferManager.BufferManager;
+import Exceptions.DBEngineException;
 import LogManager.LogManager;
-import Steps.Step;
+import Abstracts.Step;
 
 public class Transaction {
 
@@ -64,12 +65,17 @@ public class Transaction {
 	}
 
 	public void execute() {
+		final Transaction t = this;
 		new Thread() {
 			public void run() {
 				getLogManager().recordStart(getID());
 				for (Iterator<Step> it = getSteps().iterator(); it.hasNext();) {
 					Step step = it.next();
-					// TODO step.execute(this);
+					try {
+						step.execute(t);
+					} catch (DBEngineException e) {
+						e.printStackTrace();
+					}
 				}
 
 				getLogManager().recordCommit(getID());

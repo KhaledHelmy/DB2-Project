@@ -54,9 +54,9 @@ public class Record {
 	}
 
 	public void delete() {
-		DBFileSystem memory = DBApp.getFileSystem();
-		memory.deleteRecord(pageName, insertionId
-				% DBApp.getInstance().getMaximumRowsCountinPage());
+		// DBFileSystem memory = DBApp.getFileSystem();
+		// memory.deleteRecord(pageName, insertionId %
+		// DBApp.getInstance().getMaximumRowsCountinPage());
 		active = false;
 	}
 
@@ -101,7 +101,6 @@ public class Record {
 	}
 
 	public void update() {
-		System.out.println("Record Update");
 		DBFileSystem memory = DBApp.getFileSystem();
 		memory.updateRecord(pageName, insertionId
 				% DBApp.getInstance().getMaximumRowsCountinPage(), toString());
