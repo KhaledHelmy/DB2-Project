@@ -14,10 +14,13 @@ public class TupleDelete extends Step {
 		Record r = (Record) values.get("record");
 		int pageNum = r.getPageNumber();
 		String pageName = r.getPageName();
-		String tableName = pageName.split("_")[0].substring(5);
+		String tableName = pageName.split("_")[0];
 		Page p = Table.getInstance(tableName).getPage(pageNum);
 		p.deleteRecord(r.getRowNumber());
-		parentTransaction.getLogManager().recordDelete(parentTransaction.getID(),(PageID)values.get("pageID"),r.getValue(Table.getInstance(tableName).getKeyColName()),r.getHtblColNameValue());
+		parentTransaction.getLogManager().recordDelete(
+				parentTransaction.getID(), (PageID) values.get("pageID"),
+				r.getValue(Table.getInstance(tableName).getKeyColName()),
+				r.getHtblColNameValue());
 	}
 
 }

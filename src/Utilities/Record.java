@@ -46,6 +46,9 @@ public class Record {
 		String value = htblColNameValue.get(column);
 		return htblColNameValue.get(column);
 	}
+	public void setColumnValue(String colName,String colVal){
+		htblColNameValue.put(colName,colVal);
+	}
 
 	public void delete() {
 		DBFileSystem memory = DBApp.getFileSystem();
