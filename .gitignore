@@ -15,4 +15,6 @@ hs_err_pid*
 .settings/
 .metadata/
 bin/
+config/
+data/
 *.class
