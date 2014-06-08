@@ -52,7 +52,6 @@ public class BufferManager implements BufferManagerInterface {
 	}
 
 	public synchronized void read(PageID pageID, Page page, boolean bModify) {
-		// Set locks!
 		int slot = getSlotNumber(pageID);
 		if (slot != -1) {
 			if (usedForWrite[slot] == true
