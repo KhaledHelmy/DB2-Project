@@ -23,6 +23,10 @@ public class Page {
 	public void addRecord(Integer row, Record record) {
 		records.put(row, record);
 	}
+	
+	public void deleteRecord(Integer row){
+		records.remove(getRecord(row));
+	}
 
 	public Record getRecord(Integer row) {
 		return records.get(row);
