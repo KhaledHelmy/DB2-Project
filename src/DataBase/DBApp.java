@@ -18,7 +18,7 @@ public class DBApp implements DBAppInterface {
 	private static DBFileSystem fileSystem = Memory.getMemory();
 	private static DBApp dBApp = new DBApp();
 	private static TransactionManager transactionManager = TransactionManager
-			.getTransactionManager();
+			.getInstance();
 
 	public static final String MaximumRowsCountinPage = "MaximumRowsCountinPage",
 			BPlusTreeN = "BPlusTreeN";
